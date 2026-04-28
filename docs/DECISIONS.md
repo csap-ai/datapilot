@@ -58,6 +58,8 @@ Decision: `apps/web` is the shared React UI source for both Web and Wails deskto
 
 Reason: one UI system keeps desktop and Web behavior consistent and avoids duplicated product work.
 
+Implementation: Wails dev mode starts `apps/web` through `pnpm --dir ../../web dev`, and Wails production builds run `apps/desktop/scripts/build-frontend.sh` to build and embed the same React app.
+
 ### 2026-04-28: Flutter for mobile later
 
 Decision: mobile is a later phase and uses Flutter.
