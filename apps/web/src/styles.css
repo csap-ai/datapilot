@@ -1,0 +1,145 @@
+:root {
+  color: #e5eefb;
+  background: #0b1120;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+a {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+.page-shell {
+  box-sizing: border-box;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 72px 24px;
+}
+
+.hero {
+  padding: 56px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 32rem),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.72));
+  box-shadow: 0 24px 80px rgba(2, 6, 23, 0.42);
+}
+
+.eyebrow {
+  margin: 0 0 16px;
+  color: #38bdf8;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  line-height: 0.98;
+}
+
+.summary {
+  max-width: 720px;
+  margin: 24px 0 0;
+  color: #cbd5e1;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.actions button,
+.actions a {
+  padding: 12px 18px;
+  text-decoration: none;
+}
+
+.actions button {
+  color: #082f49;
+  background: #38bdf8;
+}
+
+.actions a {
+  color: #e2e8f0;
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.status-card,
+.grid article {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.74);
+}
+
+.status-card {
+  margin-top: 24px;
+  padding: 24px;
+}
+
+.status-card h2,
+.grid h3 {
+  margin: 0 0 12px;
+}
+
+pre {
+  overflow: auto;
+  margin: 0;
+  color: #bae6fd;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.grid article {
+  padding: 20px;
+}
+
+.grid p,
+.status-card p {
+  margin: 0;
+  color: #94a3b8;
+  line-height: 1.7;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    padding: 32px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
