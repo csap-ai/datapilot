@@ -29,6 +29,7 @@
 - `docs/ARCHITECTURE.md`：技术架构、桌面端、移动端和 Admin Console 规划。
 - `docs/TECH_STACK.md`：已确认的语言、框架、工具和禁止项。
 - `docs/PROJECT_STRUCTURE.md`：目录、文件归属和本地-only 配置约定。
+- `docs/DEVELOPMENT_SETUP.md`：本地开发环境、Wails CLI 和验证命令。
 - `docs/GITHUB_SETUP.md`：GitHub 仓库设置、分支保护、标签和发布规划。
 - `docs/WIKI_PLAN.md`：GitHub Wiki 页面规划。
 - `docs/DESIGN_SYSTEM.md`：UI 风格、布局和交互方向。
@@ -72,7 +73,7 @@ pnpm dev:web
 pnpm dev:desktop
 ```
 
-桌面端依赖本机安装 Wails CLI。
+桌面端依赖本机安装 Wails CLI。详见 `docs/DEVELOPMENT_SETUP.md`。
 
 ## 当前状态
 

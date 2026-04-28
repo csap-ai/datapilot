@@ -7,6 +7,7 @@ DataPilot uses a traceable, desktop-first delivery process.
 - Read `README.md`, `ROADMAP.md`, and the docs under `docs/` before implementation.
 - Treat `docs/TECH_STACK.md` as the source of truth for language and framework choices.
 - Treat `docs/PROJECT_STRUCTURE.md` as the source of truth for file placement.
+- Treat `docs/DEVELOPMENT_SETUP.md` as the source of truth for local tool requirements.
 - Treat `docs/GITHUB_SETUP.md` and `docs/WIKI_PLAN.md` as the source of truth for repository operations.
 - Use `docs/TASK_BACKLOG.md` as the execution queue.
 - Update `docs/EXECUTION_PROGRESS.md` after every implementation session.

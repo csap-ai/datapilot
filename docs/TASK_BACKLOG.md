@@ -8,7 +8,7 @@ Use this backlog as the execution queue. Complete tasks in order unless the user
 - [x] Define repository structure in `docs/PROJECT_STRUCTURE.md`.
 - [x] Define GitHub repository setup in `docs/GITHUB_SETUP.md`.
 - [x] Define GitHub Wiki plan in `docs/WIKI_PLAN.md`.
-- [ ] Verify Wails CLI availability and document setup requirements.
+- [x] Verify Wails CLI availability and document setup requirements.
 - [ ] Fix Wails dev/build configuration for `apps/desktop`.
 - [ ] Make `apps/desktop` consume the shared `apps/web` React UI.
 - [ ] Add desktop-first shell layout: activity bar, resource tree, workspace, context AI, status bar.
