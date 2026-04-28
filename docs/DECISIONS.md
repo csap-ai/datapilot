@@ -22,6 +22,12 @@ Decision: desktop development requires Wails CLI, documented in `docs/DEVELOPMEN
 
 Reason: Wails is the selected desktop runtime. Local verification showed `wails` is not currently available in the shell, so desktop tasks need explicit setup before dev/build validation.
 
+### 2026-04-28: Wails frontend build uses a script
+
+Decision: use `apps/desktop/scripts/build-frontend.sh` for Wails production frontend builds.
+
+Reason: Wails does not run chained shell commands like `&&` as expected in `frontend:build`. A script keeps shared `apps/web` build and copy steps explicit and reliable.
+
 ### 2026-04-28: Public agent instructions use AGENTS.md
 
 Decision: keep `.cursor/`, `.claude/`, and `.codex/` ignored, and publish durable agent instructions through `AGENTS.md` plus docs.

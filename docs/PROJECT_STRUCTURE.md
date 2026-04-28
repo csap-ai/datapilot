@@ -84,6 +84,9 @@ Do not commit generated outputs:
 - `node_modules/`
 - `apps/web/dist/`
 - `apps/web/tsconfig.tsbuildinfo`
+- `apps/desktop/build/`
+- `apps/desktop/frontend/wailsjs/`
+- `apps/desktop/frontend/dist/assets/`
 - `bin/`
 - `.data/`
 - `.cache/`
