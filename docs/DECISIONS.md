@@ -16,6 +16,12 @@ Decision: maintain GitHub standards in-repo through `.github/`, `AGENTS.md`, `CO
 
 Reason: public contributors and AI agents need visible, versioned project rules while local assistant config stays ignored.
 
+### 2026-04-28: Wails CLI is required for desktop tasks
+
+Decision: desktop development requires Wails CLI, documented in `docs/DEVELOPMENT_SETUP.md`.
+
+Reason: Wails is the selected desktop runtime. Local verification showed `wails` is not currently available in the shell, so desktop tasks need explicit setup before dev/build validation.
+
 ### 2026-04-28: Public agent instructions use AGENTS.md
 
 Decision: keep `.cursor/`, `.claude/`, and `.codex/` ignored, and publish durable agent instructions through `AGENTS.md` plus docs.
