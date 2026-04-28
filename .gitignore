@@ -22,6 +22,9 @@ dist/
 
 # Desktop builds
 build/bin/
+apps/desktop/build/
+apps/desktop/frontend/wailsjs/
+apps/desktop/frontend/dist/assets/
 
 # Logs and env
 *.log

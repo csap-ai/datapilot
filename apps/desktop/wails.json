@@ -2,9 +2,9 @@
   "$schema": "https://wails.io/schemas/config.v2.json",
   "name": "datapilot",
   "outputfilename": "DataPilot",
-  "frontend:install": "pnpm install",
-  "frontend:build": "pnpm --dir ../../apps/web build && rm -rf frontend/dist && cp -R ../../apps/web/dist frontend/dist",
-  "frontend:dev:watcher": "pnpm --dir ../../apps/web dev",
+  "frontend:install": "pnpm --dir ../../.. install",
+  "frontend:build": "sh ../scripts/build-frontend.sh",
+  "frontend:dev:watcher": "pnpm --dir ../../web dev",
   "frontend:dev:serverUrl": "http://localhost:5173",
   "author": {
     "name": "DataPilot contributors"

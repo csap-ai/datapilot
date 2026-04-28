@@ -75,10 +75,21 @@ Desktop validation requires Wails CLI and platform-specific WebView dependencies
 
 ## Current Local Finding
 
-As of the first Desktop Foundation check, Wails CLI was not available in the local shell:
+During the first Desktop Foundation check, Wails CLI was not initially available in the local shell:
 
 ```text
 wails: command not found
 ```
 
-The next desktop task should install or document environment-specific Wails requirements before fixing the Wails dev/build chain.
+Wails CLI was then installed and verified:
+
+```text
+Wails CLI v2.12.0
+wails doctor: Your system is ready for Wails development.
+```
+
+The desktop build chain has been validated with:
+
+```bash
+wails build
+```
