@@ -73,6 +73,26 @@ pnpm dev:desktop
 
 Desktop validation requires Wails CLI and platform-specific WebView dependencies.
 
+## Shared Web/Desktop UI
+
+`apps/web` is the single React UI source for both browser and desktop surfaces.
+
+Development mode:
+
+```bash
+pnpm dev:desktop
+```
+
+Wails starts its frontend watcher with `pnpm --dir ../../web dev` from `apps/desktop`, then loads the Vite dev server at `http://localhost:5173`.
+
+Production build:
+
+```bash
+pnpm build:desktop
+```
+
+Wails runs `apps/desktop/scripts/build-frontend.sh`, which builds `apps/web` and copies the generated `dist` output into `apps/desktop/frontend/dist` for embedding.
+
 ## Current Local Finding
 
 During the first Desktop Foundation check, Wails CLI was not initially available in the local shell:
@@ -92,4 +112,11 @@ The desktop build chain has been validated with:
 
 ```bash
 wails build
+```
+
+The desktop dev chain has been validated with:
+
+```text
+Running frontend DevWatcher command: 'pnpm --dir ../../web dev'
+Vite Server URL: http://localhost:5173/
 ```

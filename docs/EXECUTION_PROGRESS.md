@@ -37,6 +37,7 @@ Goal: make the Wails desktop shell the primary experience, reuse the React UI, a
 - Fixed Wails frontend build command by moving shell chaining into `apps/desktop/scripts/build-frontend.sh`.
 - Updated desktop Wails dependency to `v2.12.0`.
 - Validated `wails build` on `darwin/arm64`.
+- Validated `wails dev` uses the shared `apps/web` React UI through the Wails frontend watcher.
 
 Validation:
 
@@ -47,14 +48,15 @@ Validation:
 - `wails version`
 - `wails doctor`
 - `wails build`
+- `wails dev` started `pnpm --dir ../../web dev` and loaded `http://localhost:5173/`
 
 ## Next Recommended Task
 
 Start M1 Desktop Foundation:
 
-1. Ensure `apps/web` React UI is shared into `apps/desktop` for dev and build workflows.
-2. Add desktop-first shell layout.
-3. Record validation evidence.
+1. Add desktop-first shell layout.
+2. Add dark-mode-first design tokens.
+3. Add Command Palette foundation.
 
 ## Progress Log
 
@@ -64,3 +66,4 @@ Start M1 Desktop Foundation:
 | 2026-04-28 | M1 Desktop Foundation | Renamed to DataPilot and completed GitHub/docs standards | `go test ./apps/api/...`; `pnpm build:web` | Verify Wails desktop chain |
 | 2026-04-28 | M1 Desktop Foundation | Verified Wails CLI availability and documented setup requirements | `wails version` failed: command not found | Fix Wails dev/build configuration |
 | 2026-04-28 | M1 Desktop Foundation | Installed Wails and fixed desktop build chain | `wails version`; `wails doctor`; `wails build` | Share React UI into desktop |
+| 2026-04-29 | M1 Desktop Foundation | Verified desktop dev and build both consume shared `apps/web` UI | `wails dev`; `wails build` | Add desktop-first shell layout |
