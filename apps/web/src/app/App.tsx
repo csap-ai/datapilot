@@ -1,65 +1,133 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { Toaster } from 'sonner';
+import { Shell } from '@/shared/shell';
+import { registerCommand } from '@/shared/command-palette';
+import { setStatus } from '@/shared/status-bar';
+import { openTab, useWorkspace, EmptyWorkspace, SqlWorkspace, TabStrip } from '@/shared/workspace';
+import { useConnections, loadConnections } from '@/shared/connections';
+import { MetadataView } from '@/shared/metadata';
+import { ERDiagram } from '@/shared/erdiagram';
+import { SchemaDiffView } from '@/shared/schemadiff';
+import { DataDiffView } from '@/shared/datadiff';
+import { DashboardView } from '@/shared/dashboard';
 
-import { fetchHealthStatus, type IHealthStatus } from '../shared/api/health';
+function WorkspaceArea() {
+  const { connections } = useConnections();
+  const workspace = useWorkspace();
 
-const pillars = [
-  '开源自部署',
-  'AI-first SQL 工作流',
-  '数据库插件化',
-  '执行前安全审查',
-];
+  if (connections.length === 0) return <EmptyWorkspace />;
 
-export function App() {
-  const [health, setHealth] = useState<IHealthStatus | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  async function checkServer() {
-    setError(null);
-
-    try {
-      setHealth(await fetchHealthStatus());
-    } catch (caught) {
-      setHealth(null);
-      setError(caught instanceof Error ? caught.message : '服务检查失败');
-    }
+  if (!workspace.activeTabId) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-[0.86rem] text-dp-text-dimmed">打开一个 Tab 开始工作</p>
+      </div>
+    );
   }
 
-  return (
-    <main className="page-shell">
-      <section className="hero">
-        <p className="eyebrow">DataPilot</p>
-        <h1>完全开源的 AI 数据库工作台</h1>
-        <p className="summary">
-          目标不是复刻 Navicat 的每一个功能，而是从连接、查询、理解、审查、协作开始，
-          构建一个可自部署、可扩展、AI 原生的数据开发环境。
-        </p>
-        <div className="actions">
-          <button type="button" onClick={checkServer}>
-            检查后端服务
-          </button>
-          <a href="https://github.com/" target="_blank" rel="noreferrer">
-            准备开源仓库
-          </a>
+  const activeTab = workspace.tabs.find((t) => t.id === workspace.activeTabId);
+  if (activeTab?.type === 'metadata' && activeTab.meta) {
+    return (
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-dp-border bg-dp-surface-overlay px-3 pt-2">
+          <TabStrip />
         </div>
-      </section>
+        <div className="min-h-0 flex-1">
+          <MetadataView meta={activeTab.meta} />
+        </div>
+      </div>
+    );
+  }
+  if (activeTab?.type === 'er-diagram' && activeTab.meta) {
+    return (
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-dp-border bg-dp-surface-overlay px-3 pt-2">
+          <TabStrip />
+        </div>
+        <div className="min-h-0 flex-1">
+          <ERDiagram connectionId={activeTab.meta.connectionId} />
+        </div>
+      </div>
+    );
+  }
+  if (activeTab?.type === 'schema-diff' && activeTab.meta?.targetConnectionId) {
+    return (
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-dp-border bg-dp-surface-overlay px-3 pt-2">
+          <TabStrip />
+        </div>
+        <div className="min-h-0 flex-1">
+          <SchemaDiffView sourceId={activeTab.meta.connectionId} targetId={activeTab.meta.targetConnectionId} />
+        </div>
+      </div>
+    );
+  }
+  if (activeTab?.type === 'dashboard') {
+    return (
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-dp-border bg-dp-surface-overlay px-3 pt-2">
+          <TabStrip />
+        </div>
+        <div className="min-h-0 flex-1">
+          <DashboardView />
+        </div>
+      </div>
+    );
+  }
+  if (activeTab?.type === 'data-diff' && activeTab.meta?.targetConnectionId && activeTab.meta?.keyColumn) {
+    return (
+      <div className="flex h-full flex-col overflow-hidden">
+        <div className="shrink-0 border-b border-dp-border bg-dp-surface-overlay px-3 pt-2">
+          <TabStrip />
+        </div>
+        <div className="min-h-0 flex-1">
+          <DataDiffView
+            sourceId={activeTab.meta.connectionId}
+            targetId={activeTab.meta.targetConnectionId}
+            schema={activeTab.meta.schema}
+            table={activeTab.meta.table}
+            keyColumn={activeTab.meta.keyColumn}
+          />
+        </div>
+      </div>
+    );
+  }
 
-      <section className="status-card">
-        <h2>服务状态</h2>
-        {health ? (
-          <pre>{JSON.stringify(health, null, 2)}</pre>
-        ) : (
-          <p>{error ?? '后端启动后点击按钮查看 /api/health 状态。'}</p>
-        )}
-      </section>
+  return <SqlWorkspace />;
+}
 
-      <section className="grid">
-        {pillars.map((pillar) => (
-          <article key={pillar}>
-            <h3>{pillar}</h3>
-            <p>这是第一阶段产品基线，后续围绕连接管理、SQL 编辑器、AI Provider 和安全执行持续展开。</p>
-          </article>
-        ))}
-      </section>
-    </main>
+export function App() {
+  useEffect(() => {
+    loadConnections();
+    setStatus({ id: 'app-name', text: 'DataPilot', position: 'left', priority: 0 });
+
+    openTab({ id: 'sql-1', label: 'SQL Console', type: 'sql-console' });
+
+    registerCommand({
+      id: 'new-sql',
+      label: '新建 SQL Console',
+      group: 'Workspace',
+      shortcut: { key: 'n', modifiers: ['meta'] },
+      handler: () => openTab({ id: `sql-${Date.now()}`, label: 'SQL Console', type: 'sql-console' }),
+    });
+    registerCommand({
+      id: 'open-dashboard',
+      label: '打开 Dashboard',
+      group: 'Workspace',
+      handler: () => openTab({ id: 'dashboard', label: 'Dashboard', type: 'dashboard' }),
+    });
+    registerCommand({ id: 'format-sql', label: '格式化 SQL', group: 'SQL', handler: () => {} });
+    registerCommand({ id: 'explain-sql', label: '解释当前 SQL', group: 'AI', handler: () => {} });
+    registerCommand({ id: 'optimize-sql', label: '优化慢查询', group: 'AI', handler: () => {} });
+    registerCommand({ id: 'export-csv', label: '导出 CSV', group: 'Export', handler: () => {} });
+  }, []);
+
+  return (
+    <>
+      <Toaster position="bottom-right" theme="dark" richColors />
+      <Shell>
+        <WorkspaceArea />
+      </Shell>
+    </>
   );
 }
