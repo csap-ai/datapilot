@@ -60,6 +60,12 @@ Reason: one UI system keeps desktop and Web behavior consistent and avoids dupli
 
 Implementation: Wails dev mode starts `apps/web` through `pnpm --dir ../../web dev`, and Wails production builds run `apps/desktop/scripts/build-frontend.sh` to build and embed the same React app.
 
+### 2026-04-29: Desktop shell starts in shared React UI
+
+Decision: implement the first desktop shell layout directly in `apps/web`, not as a Wails-only frontend.
+
+Reason: the product requires desktop and Web to stay visually and behaviorally aligned. Wails owns native capabilities, while the shared React UI owns activity navigation, resource tree, workspace, Context AI, and status presentation.
+
 ### 2026-04-28: Flutter for mobile later
 
 Decision: mobile is a later phase and uses Flutter.
@@ -84,10 +90,46 @@ Decision: credentials must not be stored in plain SQLite or plain config files.
 
 Reason: database passwords, SSH keys, and AI keys are high-value secrets and must use system secure storage or encrypted server-side storage.
 
+### 2026-05-08: go-keyring for credential storage
+
+Decision: use `github.com/zalando/go-keyring` as the cross-platform credential storage backend (macOS Keychain / Windows Credential Manager / Linux Secret Service).
+
+Reason: closes the M1 pending decision; single dependency covers all three desktop targets without per-platform branching.
+
+### 2026-05-08: Minimal in-repo migration runner
+
+Decision: write a small migration runner in `internal/metadata/migrate` instead of introducing `golang-migrate` or similar.
+
+Reason: migrations are append-only numbered SQL files (v1..vN); the runner is < 100 lines and avoids a heavy dependency for what the desktop product needs at this stage.
+
+### 2026-05-10: OpenAI-compatible HTTP for AI providers
+
+Decision: implement a single `aiprovider.openai` client that speaks OpenAI's chat-completions schema; use it for both OpenAI and Ollama by swapping `baseURL`.
+
+Reason: Ollama supports the OpenAI-compatible endpoint; one client covers two providers and any future OpenAI-compatible gateway (Azure OpenAI, vLLM, etc.).
+
+### 2026-05-11: Admin Console as in-app tab, not `/admin` route
+
+Decision: render admin features (audit logs, SQL policies, connection policies, drivers, backup) as a tab inside the shared shell instead of a separate `/admin` route.
+
+Reason: desktop-first product; users expect admin features in the same window/shell. Supersedes the 2026-04-28 `/admin` route plan. The Web deployment can still expose the same panel under `/admin` later without code split.
+
+### 2026-05-12: @xyflow/react for ER diagram
+
+Decision: use `@xyflow/react` (v12) for the ER diagram rendering layer.
+
+Reason: well-maintained, accessible, supports custom node types, MiniMap, Controls; avoids hand-rolling layout/pan/zoom. Alternatives evaluated: reaflow (less active), d3 (more wiring required).
+
+### 2026-05-12: SQLite VACUUM INTO for metadata backup
+
+Decision: backup via `VACUUM INTO <dst>` with a plain file-copy fallback when VACUUM INTO fails (e.g., metadata.db locked).
+
+Reason: VACUUM INTO produces a consistent, compacted copy without quiescing the app; file copy fallback keeps the feature usable when VACUUM is unavailable.
+
 ## Pending Decisions
 
-- Choose specific Go secure storage library or per-platform implementation.
-- Choose SQLite migration library or write a minimal migration runner.
 - Choose whether to introduce `chi` after API complexity increases.
 - Choose table virtualization implementation for large result sets.
 - Choose whether plugin loading is compile-time, local dynamic registry, or remote marketplace in later phases.
+- Decide whether ER diagram needs an auto-layout algorithm (dagre / elk) beyond the current grid placement.
+- Decide whether to add dashboard widget drag-and-drop reordering and grid persistence beyond the current `position` field.
