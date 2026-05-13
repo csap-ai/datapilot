@@ -4,9 +4,9 @@ This file is the traceable progress log for DataPilot. Update it after every imp
 
 ## Current Milestone
 
-**M5: Navicat-Class Enhancements** — completed 2026-05-12.
+**M6: Flutter Mobile** — completed 2026-05-13.
 
-Delivered: ER diagram (xyflow), query plan visualization (ExplainView in SqlWorkspace), schema compare, data compare, dashboard foundation (widgets + 4 chart types), plugin driver management + capability probing, metadata backup + audit archive.
+Delivered: 5 个 screen 全量实现（连接管理、SQL 查询、历史/收藏、AI 助手、设置），Postgres/MySQL/SQLite 直连 driver，SQL 风险评估与 desktop 对齐，readonly 闸门 + 生物认证 + 二次确认，AI 直连 OpenAI 兼容端点（4 个 action），Mobile CI workflow（analyze + test + build apk debug）。
 
 ## Previous Milestones
 
@@ -15,6 +15,7 @@ Delivered: ER diagram (xyflow), query plan visualization (ExplainView in SqlWork
 - **M3: AI SQL Foundation** — completed 2026-05-10.
 - **M3.5: Admin Console & Audit** — completed 2026-05-11.
 - **M4: Database Objects & Import/Export** — completed 2026-05-11.
+- **M5: Navicat-Class Enhancements** — completed 2026-05-12.
 
 ## Status
 
@@ -93,6 +94,18 @@ Validation:
   - CSV import with header detection (`CSVImportDialog`, `ImportCSV` API).
   - DDL generation (`GenerateTableDDL`) and data dictionary (`GenerateDataDictionary`) APIs.
 
+### 2026-05-13
+
+- M6 Flutter Mobile（5 个 screen 全量实现）：
+  - 依赖：postgres ^3.4.5, mysql_client ^0.0.27, provider ^6.1.2, intl ^0.20.1, flutter_highlight + highlight。
+  - 状态管理：`AppState`（ChangeNotifier）管 currentConnection / pendingSqlDraft / tabIndex / isUnlocked；main 用 `ChangeNotifierProvider` 包裹。
+  - 数据层：`Connection` 加 `readonly` + `sslMode`；sqflite schema v1→v2 迁移；`risk_service.dart` 复刻 desktop `app.go:412-447` 的 3 级风险评估（10 个单测覆盖）。
+  - Driver 层：`sqlite_driver` / `postgres_driver`（用 `as pg` 避免类名冲突，支持 sslMode require/disable/verify-full）/ `mysql_driver`；driver 层硬截断 1000 行（自动追加 LIMIT），UI 提示。
+  - 5 个 screen：ConnectionsScreen 列表+新建+编辑+删除；QueryScreen 连接 dropdown + SqlEditor + 执行（带 risk 闸门：readonly 阻断写、warning/danger 走 LocalAuth + 二次确认）+ 收藏 + TSV 复制；HistoryScreen TabBar 历史/收藏 + 清空 + 回填到 Query；AiScreen SegmentedButton 4 action + 复制/发送；SettingsScreen AI 配置 + 生物认证测试 + 清除全部数据 + 关于。
+  - 共用 widget：`empty_state`、`risk_confirm_dialog`、`sql_editor`、`result_table`、`connection_form_dialog`。
+  - AI：`ai_service.dart` 复刻 desktop `openai.go` 的 4 个 prompt + OpenAI 兼容 POST；baseURL/model 用 FlutterSecureStorage，apiKey 走 CredentialService。
+  - CI：`.github/workflows/mobile.yml`（pub get + analyze + test + build apk --debug）。
+
 ### 2026-05-12
 
 - M5 Navicat-Class Enhancements:
@@ -113,12 +126,13 @@ Validation:
 
 ## Next Recommended Task
 
-M5 complete. Options for next milestone:
+M6 complete. Options for next milestone:
 
-1. **M6 Flutter Mobile** — create `apps/mobile`, add connection list, readonly query, history/favorites, AI SQL assistant, and mobile safety restrictions.
-2. **M5 polish** — improve ER layout algorithm, dashboard drag-and-drop, query plan cost visualization, plugin marketplace path.
+1. **手工验证 mobile** — iOS/Android 真机或模拟器跑 5 个 screen 的端到端流程（连接、查询、生物认证、AI、设置清除）。
+2. **M7+ 候选**：mobile 分页/cursor、数据导出、ER 图 mobile 版、desktop 加 HTTP server 走代理 AI、i18n。
+3. **Desktop polish** — ER 自动布局、Dashboard 拖拽、query plan cost 可视化。
 
-Recommendation: confirm M5 features by manual desktop walkthrough before committing to M6, since mobile work will lock in current API shapes.
+Recommendation: 优先做 M6 手工验证（启 docker-compose 的 Postgres/MySQL demo，确认三个 driver 在真机上能跑通）。
 
 ## Progress Log
 
@@ -147,3 +161,4 @@ Recommendation: confirm M5 features by manual desktop walkthrough before committ
 | 2026-05-11 | M4 Database Objects & Import/Export | MetadataView (columns/indexes); BrowseTable; CSV/JSON export with audit; CSV import dialog; DDL & data dictionary generators | `go build ./...` passes; `tsc --noEmit` clean | Start M5 |
 | 2026-05-12 | M5 Navicat-Class Enhancements | ER diagram (xyflow); ExplainSQL + ExplainView; Schema/Data compare; Dashboard widgets (4 chart types); Drivers tab + ProbeConnection; backup.Service + ArchiveAudit | `go build ./...` passes; `go test ./internal/...` passes; `tsc --noEmit` clean | Manual desktop walkthrough; then plan M6 |
 | 2026-05-12 | Docs sync | Synced TASK_BACKLOG.md (M5 ticks) and EXECUTION_PROGRESS.md (M3.5/M4/M5 entries) with code reality | n/a | Commit + PR |
+| 2026-05-13 | M6 Flutter Mobile | 5 screens 全量实现：connections/query/history/ai/settings + 3 drivers + risk + readonly 闸门 + AI 直连 + CI workflow | `flutter analyze`(0 issue); `flutter test`(11 pass) | 手工验证 + 启动 demo db 测三 driver |

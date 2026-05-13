@@ -130,9 +130,9 @@ Use this backlog as the execution queue. Complete tasks in order unless the user
 
 ## M6: Flutter Mobile
 
-- [ ] Create `apps/mobile` Flutter application.
-- [ ] Add connection list.
-- [ ] Add readonly query.
-- [ ] Add query history and favorites.
-- [ ] Add AI SQL assistant.
-- [ ] Add mobile safety restrictions.
+- [x] Create `apps/mobile` Flutter application.
+- [x] Add connection list.
+- [x] Add readonly query.
+- [x] Add query history and favorites.
+- [x] Add AI SQL assistant.
+- [x] Add mobile safety restrictions.
