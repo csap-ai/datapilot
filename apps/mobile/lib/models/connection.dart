@@ -7,6 +7,8 @@ class Connection {
   final String database;
   final String username;
   final String filePath;
+  final bool readonly;
+  final String sslMode; // require | disable | verify-full (postgres only)
 
   const Connection({
     required this.id,
@@ -17,7 +19,34 @@ class Connection {
     this.database = '',
     this.username = '',
     this.filePath = '',
+    this.readonly = true,
+    this.sslMode = 'require',
   });
+
+  Connection copyWith({
+    String? id,
+    String? name,
+    String? type,
+    String? host,
+    int? port,
+    String? database,
+    String? username,
+    String? filePath,
+    bool? readonly,
+    String? sslMode,
+  }) =>
+      Connection(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        type: type ?? this.type,
+        host: host ?? this.host,
+        port: port ?? this.port,
+        database: database ?? this.database,
+        username: username ?? this.username,
+        filePath: filePath ?? this.filePath,
+        readonly: readonly ?? this.readonly,
+        sslMode: sslMode ?? this.sslMode,
+      );
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -28,6 +57,8 @@ class Connection {
         'database': database,
         'username': username,
         'file_path': filePath,
+        'readonly': readonly ? 1 : 0,
+        'ssl_mode': sslMode,
       };
 
   factory Connection.fromMap(Map<String, dynamic> m) => Connection(
@@ -39,6 +70,8 @@ class Connection {
         database: (m['database'] as String?) ?? '',
         username: (m['username'] as String?) ?? '',
         filePath: (m['file_path'] as String?) ?? '',
+        readonly: ((m['readonly'] as int?) ?? 1) == 1,
+        sslMode: (m['ssl_mode'] as String?) ?? 'require',
       );
 
   String get displayAddress {

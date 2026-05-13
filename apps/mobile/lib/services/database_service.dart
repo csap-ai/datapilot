@@ -14,7 +14,21 @@ class DatabaseService {
 
   static Future<Database> _open() async {
     final path = join(await getDatabasesPath(), 'datapilot.db');
-    return openDatabase(path, version: 1, onCreate: _onCreate);
+    return openDatabase(
+      path,
+      version: 2,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
+  }
+
+  static Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute(
+          'ALTER TABLE connections ADD COLUMN readonly INTEGER DEFAULT 1');
+      await db.execute(
+          "ALTER TABLE connections ADD COLUMN ssl_mode TEXT DEFAULT 'require'");
+    }
   }
 
   static Future<void> _onCreate(Database db, int version) async {
@@ -27,7 +41,9 @@ class DatabaseService {
         port INTEGER,
         database TEXT,
         username TEXT,
-        file_path TEXT
+        file_path TEXT,
+        readonly INTEGER DEFAULT 1,
+        ssl_mode TEXT DEFAULT 'require'
       )
     ''');
     await db.execute('''
