@@ -132,7 +132,7 @@ M6 complete. Options for next milestone:
 2. **M7+ 候选**：mobile 分页/cursor、数据导出、ER 图 mobile 版、desktop 加 HTTP server 走代理 AI、i18n。
 3. **Desktop polish** — ER 自动布局、Dashboard 拖拽、query plan cost 可视化。
 
-Recommendation: 优先做 M6 手工验证（启 docker-compose 的 Postgres/MySQL demo，确认三个 driver 在真机上能跑通）。
+Recommendation: 优先做 M6 手工验证 — 见 `docs/MOBILE_VERIFICATION.md`（macOS 本地 brew 起 PG/MySQL + iOS/Android 模拟器 5 screen checklist；不依赖 Docker）。
 
 ## Progress Log
 
@@ -162,3 +162,5 @@ Recommendation: 优先做 M6 手工验证（启 docker-compose 的 Postgres/MySQ
 | 2026-05-12 | M5 Navicat-Class Enhancements | ER diagram (xyflow); ExplainSQL + ExplainView; Schema/Data compare; Dashboard widgets (4 chart types); Drivers tab + ProbeConnection; backup.Service + ArchiveAudit | `go build ./...` passes; `go test ./internal/...` passes; `tsc --noEmit` clean | Manual desktop walkthrough; then plan M6 |
 | 2026-05-12 | Docs sync | Synced TASK_BACKLOG.md (M5 ticks) and EXECUTION_PROGRESS.md (M3.5/M4/M5 entries) with code reality | n/a | Commit + PR |
 | 2026-05-13 | M6 Flutter Mobile | 5 screens 全量实现：connections/query/history/ai/settings + 3 drivers + risk + readonly 闸门 + AI 直连 + CI workflow | `flutter analyze`(0 issue); `flutter test`(11 pass) | 手工验证 + 启动 demo db 测三 driver |
+| 2026-05-13 | Test coverage | desktop 12 internal 包单测 + web vitest 3 文件 18 用例 + integration test build tag + CI 扩展跑 desktop/web 测试 | `go test ./apps/desktop/...` 全过; `pnpm --filter @datapilot/web test` 18 pass; CI Go+Web SUCCESS | 手工验证 mobile |
+| 2026-05-13 | M6 verification | 新增 `docs/MOBILE_VERIFICATION.md`：brew 起 PG/MySQL + seed SQL + iOS/Android host 配置 + 5 screen checklist + SQLite UX 已知缺口 workaround | 文档 only | 用户跑 checklist 验证；之后开 B4 desktop HTTP proxy |
