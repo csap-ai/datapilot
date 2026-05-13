@@ -17,10 +17,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: apps/api/go.mod
+          go-version-file: apps/desktop/go.mod
 
       - name: Test API
         run: go test ./apps/api/...
+
+      - name: Test Desktop
+        run: go test ./apps/desktop/...
 
   web:
     name: Web
@@ -42,6 +45,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Test Web
+        run: pnpm --dir apps/web test
 
       - name: Build Web
         run: pnpm build:web
